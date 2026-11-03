@@ -1,8 +1,8 @@
 {
   "name": "postcss",
   "version": "8.5.32",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-03",
   "sources": [
     "https://www.npmjs.com/package/postcss"
   ],
