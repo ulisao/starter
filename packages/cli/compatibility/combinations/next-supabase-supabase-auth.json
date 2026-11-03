@@ -2,8 +2,8 @@
   "id": "next-supabase-supabase-auth",
   "backend": "supabase",
   "auth": "supabase-auth",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-03",
   "overrides": {},
   "notes": ""
 }

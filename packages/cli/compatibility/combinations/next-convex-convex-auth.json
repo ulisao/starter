@@ -5,5 +5,5 @@
   "status": "experimental",
   "verifiedAt": null,
   "overrides": {},
-  "notes": "@convex-dev/auth es 0.0.x y su soporte para Next.js es incompleto: se genera con advertencia."
+  "notes": "@convex-dev/auth es 0.0.x y su soporte para Next.js es limitado: se genera con advertencia. Verificado manualmente (typecheck, build y flujo OTP + proxy contra un backend Convex local) con los 5 métodos, pero no se promueve a verified por ser pre-1.0."
 }

@@ -1,8 +1,8 @@
 {
   "name": "@anthropic-ai/sdk",
   "version": "1.4.0",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-03",
   "sources": [
     "https://www.npmjs.com/package/@anthropic-ai/sdk"
   ],

@@ -2,8 +2,8 @@
   "id": "next-postgres-clerk",
   "backend": "postgres",
   "auth": "clerk",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-03",
   "overrides": {},
   "notes": ""
 }

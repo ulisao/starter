@@ -1,8 +1,8 @@
 {
   "name": "@biomejs/biome",
   "version": "2.6.4",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-03",
   "sources": [
     "https://www.npmjs.com/package/@biomejs/biome"
   ],

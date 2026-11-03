@@ -4,7 +4,8 @@
   "status": "candidate",
   "verifiedAt": null,
   "sources": [
-    "https://www.npmjs.com/package/@convex-dev/auth"
+    "https://www.npmjs.com/package/@convex-dev/auth",
+    "https://labs.convex.dev/auth"
   ],
-  "notes": "Pre-1.0: tratar como experimental."
+  "notes": "Pre-1.0 (0.0.x): API inestable, se trata como experimental. Peer deps: convex ^1.17, @auth/core ^0.41.1, react ^18.2 || ^19. Probado con Next 16.4.4 (proxy.ts) en typecheck, build y flujo OTP real contra un backend local de Convex. Arrastra dependencias transitivas deprecadas (lucia, @oslojs/*)."
 }

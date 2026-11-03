@@ -7,11 +7,12 @@ export default {
   templates: 'extras/biome',
   devDependencies: ['@biomejs/biome'],
   scripts: {
-    lint: 'biome check',
+    lint: 'biome lint',
+    check: 'biome check',
     'lint:fix': 'biome check --write',
     format: 'biome format --write',
   },
   summary: 'Biome: linter y formateador único (sin ESLint ni Prettier). Doc: `docs/extras/biome.md`.',
   stack: ['Biome (lint + formato) en lugar de ESLint/Prettier'],
-  notes: ['Biome: configuración en `biome.json`; `lint` revisa y `lint:fix`/`format` corrigen. No agregues ESLint ni Prettier. Ver `docs/extras/biome.md`.'],
+  notes: ['Biome: configuración en `biome.json`; `lint` revisa reglas, `check` añade formato e imports, y `lint:fix`/`format` corrigen. No agregues ESLint ni Prettier. Ver `docs/extras/biome.md`.'],
 };

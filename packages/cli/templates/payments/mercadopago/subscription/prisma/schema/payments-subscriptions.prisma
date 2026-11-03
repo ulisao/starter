@@ -1,0 +1,35 @@
+// Suscripciones de Mercado Pago (API de preapproval).
+//
+// Una fila por suscripción. Su estado lo actualiza SOLO el webhook verificado (o la
+// sincronización posterior a una cancelación), consultando la API de Mercado Pago.
+// Los cobros periódicos se registran en `PaymentTransaction` (payments.prisma) con
+// `mpPreapprovalId`. Igual que allí, `userId` es opcional y no tiene clave foránea.
+
+enum SubscriptionStatus {
+  PENDING
+  AUTHORIZED
+  PAUSED
+  CANCELLED
+}
+
+model PaymentSubscription {
+  // Se envía a Mercado Pago como `external_reference`.
+  id              String             @id @default(cuid())
+  userId          String?
+  idempotencyKey  String?            @unique
+  planId          String
+  payerEmail      String
+  // Monto y moneda fijados por el servidor al crear la suscripción (catalog.ts).
+  amount          Decimal            @db.Decimal(12, 2)
+  currency        String
+  status          SubscriptionStatus @default(PENDING)
+  checkoutUrl     String?
+  // Id del preapproval en Mercado Pago.
+  mpPreapprovalId String?            @unique
+  nextPaymentDate DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([userId])
+  @@map("payment_subscriptions")
+}
