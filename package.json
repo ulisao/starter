@@ -1,0 +1,18 @@
+{
+  "name": "baretta-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo de Baretta Starter. El paquete publicable es packages/cli (npm: baretta).",
+  "scripts": {
+    "test": "npm test --prefix packages/cli",
+    "test:unit": "npm run test:unit --prefix packages/cli",
+    "test:integration": "npm run test:integration --prefix packages/cli",
+    "validate": "node scripts/validate-project.mjs",
+    "matrix": "node scripts/validate-matrix.mjs",
+    "pack:cli": "node scripts/pack.mjs",
+    "zip": "node scripts/make-zip.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

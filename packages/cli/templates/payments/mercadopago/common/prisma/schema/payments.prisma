@@ -1,0 +1,43 @@
+// Registro de transacciones de Mercado Pago.
+//
+// Cada fila representa UN pago (pago único o un cobro de una suscripción). Se crea
+// en estado PENDING antes de hablar con Mercado Pago y solo el webhook verificado
+// cambia su estado. Sus columnas NO se relacionan con modelos de usuario: `userId`
+// es un texto opcional sin clave foránea porque el proveedor de autenticación puede
+// ser externo (Clerk, Supabase, Better Auth) o no existir.
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+  REFUNDED
+}
+
+model PaymentTransaction {
+  // Se envía a Mercado Pago como `external_reference` para relacionar cada pago con esta fila.
+  id              String        @id @default(cuid())
+  userId          String?
+  // Clave idempotente enviada por el cliente (un UUID por intento de compra).
+  // Evita crear dos cobros si el usuario hace doble clic o reintenta.
+  idempotencyKey  String?       @unique
+  productId       String
+  title           String
+  // Monto fijado en el servidor al crear la transacción; el webhook lo compara con el cobrado.
+  amount          Decimal       @db.Decimal(12, 2)
+  currency        String
+  status          PaymentStatus @default(PENDING)
+  statusDetail    String?
+  preferenceId    String?
+  checkoutUrl     String?
+  // Id del pago en Mercado Pago. Es único: una notificación repetida nunca duplica filas.
+  mpPaymentId     String?       @unique
+  // Solo para cobros de suscripción: id de la suscripción en Mercado Pago (preapproval).
+  mpPreapprovalId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([mpPreapprovalId])
+  @@map("payment_transactions")
+}

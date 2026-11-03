@@ -1,0 +1,51 @@
+# Docker Compose para DESARROLLO LOCAL de <%= name %>.
+#
+# No reemplaza al docker-compose.yml de producción (imagen completa de la aplicación);
+# este archivo solo levanta lo que necesitas mientras programas con `<%= runCmd %> dev`.
+#
+#   <%= runCmd %> docker:dev     levanta el entorno
+#   <%= runCmd %> docker:down    lo detiene (los datos se conservan en el volumen)
+
+services:
+<%#if hasPostgres%>
+  # PostgreSQL local. La aplicación (fuera de Docker) se conecta con:
+  #   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/<%= name %>
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      # SOLO DESARROLLO: nunca uses esta contraseña en un servidor accesible desde internet.
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: <%= name %>
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d <%= name %>"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
+<%#else%>
+  # Aplicación en modo desarrollo con tu código montado: los cambios se ven al guardar.
+  # Las variables secretas se leen de .env.local (opcional).
+  app:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "<%= installCmd %> && <%= runCmd %> dev"
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env.local
+        required: false
+    volumes:
+      - .:/app
+      # node_modules vive en un volumen propio para no mezclar binarios de tu sistema con los de Linux.
+      - node_modules:/app/node_modules
+
+volumes:
+  node_modules:
+<%#endif%>

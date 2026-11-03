@@ -1,0 +1,85 @@
+# Integración continua de <%= name %>: se ejecuta en cada push a main y en cada pull request.
+# Requiere el lockfile (<%= lockfile %>) versionado: la instalación es con lockfile congelado.
+# Guía y cómo agregar variables de entorno al build: docs/extras/github-actions.md
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancela ejecuciones anteriores de la misma rama cuando llega un commit nuevo.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+<%#if pmPnpm%>
+
+      - uses: pnpm/action-setup@v6
+        with:
+          # Versión mayor de pnpm. Si agregas "packageManager" a package.json, elimina esta línea.
+          version: 12
+<%#endif%>
+<%#if pmBun%>
+
+      - uses: oven-sh/setup-bun@v2
+<%#endif%>
+<%#if pmYarn%>
+
+      # Activa Yarn mediante Corepack (incluido con Node 22).
+      - run: corepack enable
+<%#endif%>
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: <%= nodeMajor %>
+<%#if !pmBun%>
+          cache: <%= packageManager %>
+<%#endif%>
+
+      - name: Instalar dependencias
+        run: <%= ciInstallCmd %>
+
+      - name: Typecheck
+        run: <%= runCmd %> typecheck
+<%#if hasBiome%>
+
+      - name: Lint
+        run: <%= runCmd %> lint
+<%#endif%>
+<%#if hasVitest%>
+
+      - name: Pruebas unitarias
+        run: <%= runCmd %> test
+<%#endif%>
+
+      # El build no necesita base de datos ni secretos reales. Si tu código exige variables
+      # públicas al compilar, defínelas con "env:" (ver docs/extras/github-actions.md).
+      - name: Build
+        run: <%= runCmd %> build
+<%#if hasPlaywright%>
+
+      - name: Instalar navegadores de Playwright
+        run: <%= execCmd %> playwright install --with-deps chromium
+
+      - name: Pruebas e2e
+        run: <%= runCmd %> test:e2e
+
+      - name: Subir reporte de Playwright
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+<%#endif%>
