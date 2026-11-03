@@ -1,0 +1,9 @@
+{
+  "id": "next-postgres-none",
+  "backend": "postgres",
+  "auth": "none",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": ""
+}

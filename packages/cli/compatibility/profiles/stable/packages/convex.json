@@ -1,0 +1,10 @@
+{
+  "name": "convex",
+  "version": "1.49.0",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/convex"
+  ],
+  "notes": "Engines node >=22."
+}

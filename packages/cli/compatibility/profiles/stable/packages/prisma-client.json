@@ -1,0 +1,10 @@
+{
+  "name": "@prisma/client",
+  "version": "7.10.1",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@prisma/client"
+  ],
+  "notes": ""
+}

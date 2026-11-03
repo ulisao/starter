@@ -1,0 +1,68 @@
+# Docker Compose de <%= name %> (entorno tipo producción).
+#
+#   docker compose up --build            levanta la aplicación (y PostgreSQL si el proyecto lo usa)
+
+services:
+  app:
+    build:
+      context: .
+      args:
+<%= composeBuildArgs %>
+    ports:
+      - "3000:3000"
+    # Las variables secretas se leen de .env.local (opcional: el archivo puede no existir).
+    env_file:
+      - path: .env.local
+        required: false
+<%#if hasPostgres%>
+    environment:
+      # Dentro de la red de Compose la base se llama "db", no "localhost".
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/<%= name %>
+    depends_on:
+      db:
+        condition: service_healthy
+<%#endif%>
+<%#if hasPrisma%>
+
+  # Aplica las migraciones de Prisma. No arranca solo:
+  #   docker compose --profile tools run --rm migrate
+  migrate:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: builder
+    command: ["<%= runCmd %>", "db:deploy"]
+    env_file:
+      - path: .env.local
+        required: false
+<%#if hasPostgres%>
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/<%= name %>
+    depends_on:
+      db:
+        condition: service_healthy
+<%#endif%>
+<%#endif%>
+<%#if hasPostgres%>
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      # SOLO DESARROLLO: cambia esta contraseña si expones la base fuera de tu equipo.
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: <%= name %>
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d <%= name %>"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
+<%#endif%>

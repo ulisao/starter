@@ -1,0 +1,10 @@
+{
+  "name": "@convex-dev/better-auth",
+  "version": "0.12.7",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@convex-dev/better-auth"
+  ],
+  "notes": "Peer better-auth >=1.6.11 <1.7.0."
+}

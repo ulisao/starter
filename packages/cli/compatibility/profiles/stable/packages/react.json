@@ -1,0 +1,10 @@
+{
+  "name": "react",
+  "version": "19.2.9",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/react"
+  ],
+  "notes": "Dentro de los rangos peer de next y @clerk/nextjs (~19.2.3)."
+}

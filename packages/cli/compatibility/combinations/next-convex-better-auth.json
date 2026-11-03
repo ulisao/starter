@@ -1,0 +1,11 @@
+{
+  "id": "next-convex-better-auth",
+  "backend": "convex",
+  "auth": "better-auth",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {
+    "better-auth": "1.6.34"
+  },
+  "notes": "@convex-dev/better-auth@0.12.7 exige better-auth >=1.6.11 <1.7.0, por eso se fija 1.6.34 en vez de 1.7.x."
+}

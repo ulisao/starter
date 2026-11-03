@@ -1,0 +1,10 @@
+{
+  "name": "react-dom",
+  "version": "19.2.9",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/react-dom"
+  ],
+  "notes": "Mismo release que react."
+}

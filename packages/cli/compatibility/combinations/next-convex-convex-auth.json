@@ -1,0 +1,9 @@
+{
+  "id": "next-convex-convex-auth",
+  "backend": "convex",
+  "auth": "convex-auth",
+  "status": "experimental",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": "@convex-dev/auth es 0.0.x y su soporte para Next.js es incompleto: se genera con advertencia."
+}

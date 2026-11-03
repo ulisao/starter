@@ -1,0 +1,10 @@
+{
+  "name": "@tailwindcss/postcss",
+  "version": "4.3.4",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@tailwindcss/postcss"
+  ],
+  "notes": ""
+}

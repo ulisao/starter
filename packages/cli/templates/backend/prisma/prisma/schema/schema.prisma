@@ -1,0 +1,21 @@
+// Configuración base de Prisma 7.
+//
+// El esquema está dividido en varios archivos dentro de prisma/schema/:
+//   - schema.prisma  (este archivo): generador y datasource.
+//   - app.prisma:    modelos de tu aplicación.
+// Los módulos opcionales (autenticación, pagos) agregan su propio archivo .prisma
+// en esta misma carpeta; Prisma los une automáticamente.
+
+generator client {
+  // "prisma-client" es el generador de Prisma 7: emite código TypeScript
+  // dentro del proyecto (src/generated/prisma) en lugar de node_modules.
+  // Esa carpeta está en .gitignore y se regenera con `<%= runCmd %> db:generate`.
+  provider = "prisma-client"
+  output   = "../../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // En Prisma 7 la URL de conexión NO va aquí: se declara en prisma.config.ts
+  // (para migraciones) y se pasa al adaptador en src/lib/database/prisma.ts (en runtime).
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@upstash/ratelimit",
+  "version": "2.2.0",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@upstash/ratelimit"
+  ],
+  "notes": ""
+}

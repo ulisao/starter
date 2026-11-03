@@ -1,0 +1,9 @@
+{
+  "id": "next-postgres-better-auth",
+  "backend": "postgres",
+  "auth": "better-auth",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": ""
+}

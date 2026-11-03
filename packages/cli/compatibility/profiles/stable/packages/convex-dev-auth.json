@@ -1,0 +1,10 @@
+{
+  "name": "@convex-dev/auth",
+  "version": "0.0.96",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@convex-dev/auth"
+  ],
+  "notes": "Pre-1.0: tratar como experimental."
+}

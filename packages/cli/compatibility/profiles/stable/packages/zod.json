@@ -1,0 +1,10 @@
+{
+  "name": "zod",
+  "version": "4.6.7",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/zod"
+  ],
+  "notes": "Validación de entradas externas. Compatible con better-auth (zod ^4)."
+}

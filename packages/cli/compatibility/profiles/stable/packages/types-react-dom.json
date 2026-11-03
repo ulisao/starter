@@ -1,0 +1,10 @@
+{
+  "name": "@types/react-dom",
+  "version": "19.2.7",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@types/react-dom"
+  ],
+  "notes": ""
+}

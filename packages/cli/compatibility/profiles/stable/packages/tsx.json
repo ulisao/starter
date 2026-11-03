@@ -1,0 +1,10 @@
+{
+  "name": "tsx",
+  "version": "4.23.15",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/tsx"
+  ],
+  "notes": "Ejecuta prisma/seed.ts."
+}

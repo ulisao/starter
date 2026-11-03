@@ -1,0 +1,9 @@
+{
+  "id": "next-supabase-none",
+  "backend": "supabase",
+  "auth": "none",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": ""
+}

@@ -1,0 +1,10 @@
+{
+  "name": "dotenv",
+  "version": "18.0.9",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/dotenv"
+  ],
+  "notes": "Lo usa prisma.config.ts para leer .env.local."
+}

@@ -1,0 +1,10 @@
+{
+  "name": "pg",
+  "version": "8.23.1",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/pg"
+  ],
+  "notes": ""
+}

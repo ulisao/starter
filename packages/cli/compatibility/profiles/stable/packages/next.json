@@ -1,0 +1,11 @@
+{
+  "name": "next",
+  "version": "16.4.4",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/next",
+    "https://nextjs.org/docs"
+  ],
+  "notes": "Next.js App Router. Node >=20.9. En 16 el antiguo middleware se llama proxy."
+}

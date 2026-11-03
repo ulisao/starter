@@ -1,0 +1,10 @@
+{
+  "name": "@types/node",
+  "version": "22.20.5",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@types/node"
+  ],
+  "notes": "Alineado con el piso de Node 22."
+}

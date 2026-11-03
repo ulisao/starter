@@ -1,0 +1,9 @@
+{
+  "id": "next-convex-clerk",
+  "backend": "convex",
+  "auth": "clerk",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": ""
+}

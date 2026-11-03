@@ -1,0 +1,10 @@
+{
+  "name": "prisma",
+  "version": "7.10.1",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/prisma"
+  ],
+  "notes": "NO usar dist-tag latest (8.0.0-rc.30). Engines: ^20.19||^22.12||>=24."
+}

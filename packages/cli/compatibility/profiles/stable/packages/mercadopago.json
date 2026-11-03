@@ -1,0 +1,10 @@
+{
+  "name": "mercadopago",
+  "version": "3.6.1",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/mercadopago"
+  ],
+  "notes": ""
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@clerk/nextjs",
+  "version": "7.9.23",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@clerk/nextjs"
+  ],
+  "notes": "Peer next ^16.0.10, react ~19.2.3."
+}

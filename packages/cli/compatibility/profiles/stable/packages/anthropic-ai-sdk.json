@@ -1,0 +1,10 @@
+{
+  "name": "@anthropic-ai/sdk",
+  "version": "1.4.0",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@anthropic-ai/sdk"
+  ],
+  "notes": ""
+}

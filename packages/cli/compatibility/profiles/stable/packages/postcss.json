@@ -1,0 +1,10 @@
+{
+  "name": "postcss",
+  "version": "8.5.32",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/postcss"
+  ],
+  "notes": ""
+}

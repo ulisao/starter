@@ -1,0 +1,13 @@
+{
+  "name": "stable",
+  "version": "2026.11.0",
+  "updated": "2026-11-03",
+  "node": ">=22.12.0",
+  "description": "Perfil conservador: versiones estables mutuamente compatibles. Nunca usa dist-tag latest a ciegas.",
+  "rules": [
+    "Prisma 7.x estable (el dist-tag latest apunta a 8.0.0-rc, que NO es estable).",
+    "TypeScript 5.9.x (latest es 7.x, el port nativo; todavía no se adopta).",
+    "Node >=22.12 porque Convex (>=22) y Vitest 5 (^22.12) lo exigen.",
+    "better-auth 1.6.x cuando se usa con Convex: @convex-dev/better-auth declara peer <1.7.0."
+  ]
+}

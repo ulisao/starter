@@ -1,0 +1,9 @@
+{
+  "id": "next-convex-none",
+  "backend": "convex",
+  "auth": "none",
+  "status": "candidate",
+  "verifiedAt": null,
+  "overrides": {},
+  "notes": ""
+}

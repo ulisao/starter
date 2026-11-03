@@ -1,0 +1,10 @@
+{
+  "name": "better-auth",
+  "version": "1.7.15",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/better-auth"
+  ],
+  "notes": "Peers: next ^16, prisma ^7. Con Convex se usa 1.6.34 (ver combinación)."
+}

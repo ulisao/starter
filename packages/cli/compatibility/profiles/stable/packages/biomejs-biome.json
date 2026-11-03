@@ -1,0 +1,10 @@
+{
+  "name": "@biomejs/biome",
+  "version": "2.6.4",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@biomejs/biome"
+  ],
+  "notes": ""
+}

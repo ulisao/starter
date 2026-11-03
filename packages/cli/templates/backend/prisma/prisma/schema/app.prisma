@@ -1,0 +1,17 @@
+// Modelos de la aplicación.
+//
+// Agrega aquí tus modelos y luego crea la migración:
+//   <%= runCmd %> db:migrate -- --name descripcion_del_cambio
+// Nunca modifiques la base de datos a mano: todo cambio pasa por una migración.
+
+// Mensajes del formulario de contacto de ejemplo (src/features/contact).
+// Bórralo cuando reemplaces el formulario por tu funcionalidad real.
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@playwright/test",
+  "version": "1.64.1",
+  "status": "candidate",
+  "verifiedAt": null,
+  "sources": [
+    "https://www.npmjs.com/package/@playwright/test"
+  ],
+  "notes": ""
+}
