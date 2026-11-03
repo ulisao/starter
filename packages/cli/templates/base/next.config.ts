@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+<%= slot_nextConfigImports %>
 
 // Configuración de Next.js.
 //
@@ -10,4 +11,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 };
 
-export default nextConfig;
+// Los módulos opcionales (por ejemplo Sentry) envuelven la configuración aquí.
+let config: NextConfig = nextConfig;
+<%= slot_nextConfigWrappers %>
+
+export default config;

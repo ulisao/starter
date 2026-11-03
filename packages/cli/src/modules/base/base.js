@@ -22,6 +22,8 @@ export default {
       where: 'En desarrollo: http://localhost:3000. En producción: tu dominio (ej: https://miapp.com).',
     },
   ],
+  // Puntos de extensión de next.config.ts: los módulos aportan imports y código que envuelve la config.
+  slots: { nextConfigImports: '', nextConfigWrappers: '' },
   stack: ['Next.js 16 (App Router) + React 19 + TypeScript estricto', 'Tailwind CSS 4 con tokens de diseño en variables CSS', 'Zod para validación de entradas'],
   notes: [
     'Base: las rutas viven en `src/app/`, la lógica en `src/services/` y las integraciones en `src/lib/`. Ejemplo completo de feature: `src/features/contact/`.',
