@@ -1,8 +1,8 @@
 {
   "name": "@sentry/nextjs",
   "version": "11.10.0",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-04",
   "sources": [
     "https://www.npmjs.com/package/@sentry/nextjs"
   ],

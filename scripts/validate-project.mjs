@@ -17,7 +17,7 @@
 
 import { parseArgs } from 'node:util';
 import { spawnSync } from 'node:child_process';
-import { appendFileSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { plan, writeProject } from '../packages/cli/src/core/generator/index.js';
 
@@ -35,6 +35,7 @@ const { values } = parseArgs({
     keep: { type: 'boolean', default: false },
     record: { type: 'boolean', default: false },
     'skip-install': { type: 'boolean', default: false },
+    'generate-only': { type: 'boolean', default: false },
   },
 });
 
@@ -52,12 +53,27 @@ const cfg = {
 
 const dir = resolve(values.workdir, cfg.name);
 const log = join(resolve(values.workdir), `${cfg.name}.log`);
+mkdirSync(resolve(values.workdir), { recursive: true });
 writeFileSync(log, '');
 rmSync(dir, { recursive: true, force: true });
 
 const result = await plan(cfg);
 writeProject(result, dir);
 console.log(`Generado ${cfg.name}: ${result.files.size} archivos, estado de compatibilidad: ${result.status}`);
+
+// Chequeo de humo: ninguna plantilla debe quedar con marcadores sin resolver.
+const unresolved = [...result.files].filter(([, c]) => typeof c === 'string' && (c.includes('<%#') || c.includes('<%=')));
+if (unresolved.length) {
+  console.log(`FAIL  generación  marcadores sin resolver en: ${unresolved.map(([p]) => p).join(', ')}`);
+  process.exit(1);
+}
+
+// --generate-only: valida solo que el proyecto se genera limpio (sin install/build). Humo rápido.
+if (values['generate-only']) {
+  console.log('PASS  generación (sin marcadores sin resolver)');
+  if (!values.keep) rmSync(dir, { recursive: true, force: true });
+  process.exit(0);
+}
 
 const extraEnv = Object.fromEntries(values.env.map((kv) => [kv.slice(0, kv.indexOf('=')), kv.slice(kv.indexOf('=') + 1)]));
 const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));

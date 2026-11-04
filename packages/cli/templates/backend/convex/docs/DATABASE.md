@@ -91,7 +91,14 @@ En un Client Component: `const tasks = useQuery(api.tasks.list)` y `const add = 
 - Ninguna clave secreta debe tener el prefijo `NEXT_PUBLIC_`.
 <%#if isConvexAuth%>
 - Con Convex Auth, obtén el usuario con `getAuthUserId(ctx)` (ver `docs/AUTHENTICATION.md`).
-<%#else%>
+<%#endif%>
+<%#if isClerk%>
+- Con Clerk, obtén la identidad con `ctx.auth.getUserIdentity()` (ver `convex/viewer.ts` y `docs/AUTHENTICATION.md`).
+<%#endif%>
+<%#if isBetterAuth%>
+- Con Better Auth, obtén el usuario con `authComponent.getAuthUser(ctx)` (ver `docs/AUTHENTICATION.md`).
+<%#endif%>
+<%#if !hasAuth%>
 - Este proyecto no incluye autenticación: sin identidad de usuario solo puedes restringir por reglas de datos. Si vas a guardar datos por usuario, agrega un proveedor de autenticación antes.
 <%#endif%>
 

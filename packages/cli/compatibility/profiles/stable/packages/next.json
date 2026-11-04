@@ -2,7 +2,7 @@
   "name": "next",
   "version": "16.4.4",
   "status": "verified",
-  "verifiedAt": "2026-11-03",
+  "verifiedAt": "2026-11-04",
   "sources": [
     "https://www.npmjs.com/package/next",
     "https://nextjs.org/docs"

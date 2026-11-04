@@ -8,14 +8,8 @@
  * @module
  */
 
-<%#if isConvexAuth%>
-import type * as auth from "../auth.js";
-<%#endif%>
 import type * as contactMessages from "../contactMessages.js";
-<%#if isConvexAuth%>
-import type * as http from "../http.js";
-import type * as users from "../users.js";
-<%#endif%>
+<%= slot_convexApiImports %>
 
 import type {
   ApiFromModules,
@@ -24,14 +18,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-<%#if isConvexAuth%>
-  auth: typeof auth;
-<%#endif%>
   contactMessages: typeof contactMessages;
-<%#if isConvexAuth%>
-  http: typeof http;
-  users: typeof users;
-<%#endif%>
+<%= slot_convexApiModules %>
 }>;
 
 /**
@@ -60,4 +48,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+<%= slot_convexComponents %>
+};

@@ -2,7 +2,7 @@
 // Los 5 métodos de acceso (contraseña, contraseña + Google, Google, magic link, OTP) se
 // activan en el Dashboard de Clerk, no en el código: por eso las plantillas son casi
 // idénticas y solo cambian los textos y la documentación según `cfg.authMethod`.
-// Punto de extensión: la integración con Convex (`hasConvex`) se agregará aquí después.
+// La integración con Convex vive en clerk-convex.js.
 
 export default {
   id: 'auth-clerk',

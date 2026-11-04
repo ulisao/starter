@@ -1,0 +1,32 @@
+# CI del repositorio del generador (no de los proyectos generados).
+# Corre los tests del CLI y una verificación de que toda la matriz se genera sin marcadores sin
+# resolver (modo seco: no instala ni compila proyectos, así es rápido y determinista).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+
+      # El CLI tiene una sola dependencia (@clack/prompts); no hay lockfile en el raíz.
+      - name: Instalar dependencias del CLI
+        run: npm install
+        working-directory: packages/cli
+
+      - name: Tests del CLI
+        run: npm test
+
+      - name: Matriz de generación (modo seco)
+        run: node scripts/validate-matrix.mjs --full --dry

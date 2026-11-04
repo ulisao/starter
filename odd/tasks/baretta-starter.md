@@ -29,6 +29,14 @@ T3 fase 1 COMPLETA (8 unidades). Verificado con install+tsc+build real:
 - convex+convex-auth: experimental (tsc+build ok, OTP probado en vivo con backend local).
 No verificado nunca contra servicios reales: Google OAuth, Mercado Pago API, Resend, Sentry DSN, Supabase real. Docker no instalado en la máquina (compose sin `config`).
 
+## Estado al cierre de sesión 2 (2026-11-04) — FASE 2 COMPLETA
+Todo lo de abajo (items 1–5) resuelto. Verificado con `npm test` (45/45), `node scripts/validate-matrix.mjs --full --dry` (33/33 generan limpio) y builds reales (install+typecheck+build) de: convex+none, convex+clerk, convex+better-auth, supabase+clerk, supabase+better-auth, convex+none+subscription, convex+clerk+one-time, convex+better-auth+subscription, postgres+none+TODOS-los-extras. `npm run pack:cli` OK (292 archivos).
+- Pagos sobre Convex: plantillas reestructuradas en shared + prisma/convex (como better-auth). convex/payments.ts + convex/paymentsSubscriptions.ts (tablas vía slot convexSchemaTables, protegidas por CONVEX_PAYMENTS_SECRET, mutations serializables = idempotencia segura). Servicios transactions/checkout/subscriptions con el MISMO contrato en ambas persistencias.
+- Bug preexistente corregido: client-provider better-auth+convex necesitaba `as unknown as AuthClientProp` (nunca había pasado tsc).
+- Matriz de compatibilidad: 10/11 combos verified; convex+convex-auth sigue experimental a propósito. Paquetes candidate restantes: solo los de @convex-dev/auth (experimental).
+- validate-matrix.mjs: envs falsas por proveedor; GOOGLE_CLIENT_ID añadido para better-auth+google sobre Prisma (en Convex las creds viven en el deployment). Default workdir ahora portable (os.tmpdir).
+- Pendiente NO crítico: `npm run zip` (requiere commitear antes), correr matriz completa con --record contra install real (lento), tests unitarios de signature.ts de MP. Nunca verificado contra servicios reales (OAuth Google, API MP, Resend, Sentry, Supabase/Convex en vivo).
+
 ## FASE 2 — pendiente (en este orden)
 1. Núcleo: (a) pnpm falla ERR_PNPM_IGNORED_BUILDS -> generar allowBuilds (pnpm-workspace.yaml o campo package.json vía hook packageJson) para prisma/@prisma/engines/esbuild; ojo npm 11 también avisa install-scripts; (b) header base sin link a /login (slot de navegación o enlace con hasAuth); (c) yarn: commandsFor usa `yarn dlx`/`--frozen-lockfile` (inconsistente Classic vs Berry); (d) Biome: formatear plantillas base para que `lint` pueda volver a `biome check` (hoy `biome lint`); (e) env con target (variables de deployment Convex vs .env.local) opcional.
 2. Combinaciones sin implementar: convex+clerk, convex+better-auth (@convex-dev/better-auth, better-auth 1.6.34), supabase+clerk, supabase+better-auth (validar), pagos sobre Convex (tablas vía slots convexSchemaTables), storage supabase/convex (revalidar; riesgo variable NEXT_PUBLIC_SUPABASE_URL duplicada), Resend en better-auth/convex-auth.

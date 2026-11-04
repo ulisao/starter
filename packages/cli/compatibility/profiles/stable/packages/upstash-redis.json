@@ -1,8 +1,8 @@
 {
   "name": "@upstash/redis",
   "version": "1.41.0",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-04",
   "sources": [
     "https://www.npmjs.com/package/@upstash/redis"
   ],

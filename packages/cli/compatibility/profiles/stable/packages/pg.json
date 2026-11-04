@@ -2,7 +2,7 @@
   "name": "pg",
   "version": "8.23.1",
   "status": "verified",
-  "verifiedAt": "2026-11-03",
+  "verifiedAt": "2026-11-04",
   "sources": [
     "https://www.npmjs.com/package/pg"
   ],

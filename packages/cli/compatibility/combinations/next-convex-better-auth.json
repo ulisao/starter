@@ -2,8 +2,8 @@
   "id": "next-convex-better-auth",
   "backend": "convex",
   "auth": "better-auth",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-04",
   "overrides": {
     "better-auth": "1.6.34"
   },

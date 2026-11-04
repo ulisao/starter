@@ -4,6 +4,9 @@
 // SLOTS que este módulo DEFINE para que otros módulos (autenticación, pagos...) aporten al schema
 // sin tocar sus archivos (la plantilla convex/schema.ts los imprime):
 //   convexSchemaImports → líneas `import ...` adicionales (una por línea).
+//   convexApiImports    → líneas `import type * as x from "../x.js"` de archivos de convex/ que aporte el módulo.
+//   convexApiModules    → entradas `x: typeof x;` correspondientes dentro de ApiFromModules.
+//   convexComponents    → propiedades dentro de `components: { ... }` (componentes de Convex instalados).
 //   convexSchemaTables  → entradas dentro de defineSchema({ ... }), terminadas en coma
 //                         (ej: `...authTables,` o `payments: defineTable({...}),`).
 // Un módulo los usa declarando `slots: { convexSchemaImports: '...', convexSchemaTables: '...' }`.
@@ -48,7 +51,7 @@ export default {
       order: 20,
     },
   ],
-  slots: { convexSchemaImports: '', convexSchemaTables: '' },
+  slots: { convexSchemaImports: '', convexSchemaTables: '', convexApiImports: '', convexApiModules: '', convexComponents: '' },
   stack: ['Convex (backend gestionado: base de datos reactiva, queries/mutations/actions en TypeScript)'],
   notes: [
     'Convex: esquema en `convex/schema.ts`, funciones en `convex/*.ts` (query, mutation, action). `convex/_generated/` lo regenera `convex dev` y se versiona. Guía completa: `docs/DATABASE.md`.',

@@ -29,6 +29,8 @@ export default {
   slots: {
     convexSchemaImports: 'import { authTables } from "@convex-dev/auth/server";',
     convexSchemaTables: '  ...authTables,',
+    convexApiImports: ['import type * as auth from "../auth.js";', 'import type * as http from "../http.js";', 'import type * as users from "../users.js";'],
+    convexApiModules: ['  auth: typeof auth;', '  http: typeof http;', '  users: typeof users;'],
   },
   env: (cfg) => [
     {

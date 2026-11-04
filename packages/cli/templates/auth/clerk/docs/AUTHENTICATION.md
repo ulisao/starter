@@ -64,3 +64,16 @@ Para proteger más rutas, agrégalas a `createRouteMatcher([...])` en `src/proxy
 - **Aparecen métodos de acceso que no elegiste:** están activos en el Dashboard de Clerk; desactívalos allí.
 - **`auth() was called but Clerk can't detect usage of clerkMiddleware()`:** el archivo debe llamarse `src/proxy.ts` y exportar el middleware por defecto.
 - **Producción:** crea una instancia de producción en Clerk y usa sus claves (`pk_live_` y `sk_live_`); las claves de desarrollo no sirven.
+<%#if hasConvex%>
+
+## Integración con Convex
+Convex valida los tokens que emite Clerk; así las funciones de `convex/` saben quién llama sin que el cliente pueda falsificarlo.
+
+1. En el Dashboard de Clerk abre **Integrations → Convex** y actívala (crea la configuración JWT para Convex). Copia el **Frontend API URL** (Configure → Developers → API keys).
+2. Guarda ese dominio en el deployment de Convex (no en `.env.local`): `<%= execCmd %> convex env set CLERK_JWT_ISSUER_DOMAIN https://tu-instancia.clerk.accounts.dev`. Para producción repite el comando contra el deployment de producción (`--prod`).
+3. Ejecuta `<%= runCmd %> convex:dev` para subir `convex/auth.config.ts`.
+
+Piezas: `convex/auth.config.ts` (declara a Clerk como emisor), `src/lib/convex/client-provider.tsx` (`ConvexProviderWithClerk`, anidado dentro de `<ClerkProvider>`) y `convex/viewer.ts` (ejemplo de función que lee la identidad con `ctx.auth.getUserIdentity()`; `identity.subject` es el mismo id que devuelve `getSessionUserId()`).
+
+Errores frecuentes: `No auth provider found matching the given token` indica que `CLERK_JWT_ISSUER_DOMAIN` falta o no coincide con el emisor del token; `useQuery` devuelve datos de usuario `null` mientras Clerk carga (usa `useConvexAuth()` para esperar).
+<%#endif%>

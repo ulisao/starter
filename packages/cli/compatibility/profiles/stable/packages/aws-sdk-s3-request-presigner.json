@@ -2,7 +2,7 @@
   "name": "@aws-sdk/s3-request-presigner",
   "version": "3.1161.0",
   "status": "verified",
-  "verifiedAt": "2026-11-03",
+  "verifiedAt": "2026-11-04",
   "sources": [
     "https://www.npmjs.com/package/@aws-sdk/s3-request-presigner"
   ],

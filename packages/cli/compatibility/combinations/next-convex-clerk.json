@@ -2,8 +2,8 @@
   "id": "next-convex-clerk",
   "backend": "convex",
   "auth": "clerk",
-  "status": "candidate",
-  "verifiedAt": null,
+  "status": "verified",
+  "verifiedAt": "2026-11-04",
   "overrides": {},
   "notes": ""
 }

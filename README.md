@@ -45,6 +45,21 @@ Opciones de `create`: `--backend`, `--auth`, `--auth-method`, `--payments`, `--e
 
 Antes de escribir archivos se muestra un resumen de la configuración y el estado de compatibilidad, y se pide confirmación. Si la instalación de dependencias falla, el proyecto se conserva.
 
+## Estado del proyecto
+
+Cada combinación de backend + autenticación tiene un estado de compatibilidad. `verified` significa que se generó un proyecto real y pasó `install` + `typecheck` + `build` (y `lint`/`test` cuando aplica) con la última ejecución de `npm run matrix`. Consultá el estado vigente con `npx baretta compatibility`.
+
+| Backend | Sin auth | Clerk | Supabase Auth | Better Auth | Convex Auth |
+| --- | --- | --- | --- | --- | --- |
+| **PostgreSQL** | ✅ verified | ✅ verified | — | ✅ verified | — |
+| **Supabase** | ✅ verified | ✅ verified | ✅ verified | ✅ verified | — |
+| **Convex** | ✅ verified | ✅ verified | — | ✅ verified | 🧪 experimental |
+
+- **Pagos (Mercado Pago)**: pago único y suscripción verificados sobre los tres backends. En Convex la persistencia vive en `convex/payments.ts` / `convex/paymentsSubscriptions.ts` (tablas `paymentTransactions` y `paymentSubscriptions`), protegidas por `CONVEX_PAYMENTS_SECRET`.
+- **Clerk ↔ Convex** y **Better Auth ↔ Convex** (`@convex-dev/better-auth`, `better-auth` fijado en 1.6.x) están integrados y verificados.
+- **Extras** (Resend, Sentry, Docker, Biome, Vitest, Playwright, GitHub Actions, Storage, IA, Rate limiting, Analytics) verificados en conjunto sobre PostgreSQL.
+- **Nunca verificado contra servicios reales** (solo credenciales de formato válido en el build): OAuth de Google, API de Mercado Pago, Resend, Sentry, Supabase y Convex en vivo. La verificación cubre generación, tipos y build, no el comportamiento end-to-end con cada proveedor.
+
 ## Instalación para desarrollo
 
 ```bash
