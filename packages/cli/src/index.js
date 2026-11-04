@@ -1,13 +1,14 @@
 // Enrutador de comandos de la CLI.
 //
-// Hoy existen `create` y `compatibility`. Para agregar `doctor` o `update`,
+// Hoy existen `create`, `compatibility` y `doctor`. Para agregar `update`,
 // creá src/cli/commands/<nombre>.js y registralo en COMMANDS (ver docs/DEVELOPMENT.md).
 
 import { readFileSync } from 'node:fs';
 import { createCommand, CREATE_HELP } from './cli/commands/create.js';
 import { compatibilityCommand } from './cli/commands/compatibility.js';
+import { doctorCommand, DOCTOR_HELP } from './cli/commands/doctor.js';
 
-const COMMANDS = { create: createCommand, compatibility: compatibilityCommand };
+const COMMANDS = { create: createCommand, compatibility: compatibilityCommand, doctor: doctorCommand };
 
 const HELP = `
 Baretta Starter — generador de proyectos Next.js de Estudio Baretta
@@ -17,11 +18,12 @@ Uso: baretta <comando> [opciones]
 Comandos:
   create          Crea un proyecto nuevo (asistente interactivo)
   compatibility   Muestra el perfil de compatibilidad y el estado de cada combinación
+  doctor          Diagnostica un proyecto generado contra el registro de compatibilidad
 
 Opciones:
   -v, --version   Versión del CLI
   -h, --help      Ayuda
-${CREATE_HELP}`;
+${CREATE_HELP}${DOCTOR_HELP}`;
 
 export async function main(argv) {
   const [cmd, ...rest] = argv;
