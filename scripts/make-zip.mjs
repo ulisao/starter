@@ -9,7 +9,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const out = resolve(process.argv[2] ?? join(root, 'baretta-starter.zip'));
@@ -25,7 +25,12 @@ if (bad.length) throw new Error(`Archivos prohibidos en el ZIP: ${bad.join(', ')
 const tmp = mkdtempSync(join(tmpdir(), 'baretta-zip-'));
 const list = join(tmp, 'files.txt');
 writeFileSync(list, files.join('\n') + '\n');
-const r = spawnSync('tar', ['-a', '-cf', out, '-T', list], { cwd: root, encoding: 'utf8' });
+// En Windows, el GNU tar de Git Bash interpreta el `C:` de una ruta absoluta como un host remoto.
+// Pasar la salida relativa al cwd (cuando queda dentro del repo) evita el colon y funciona igual en
+// bsdtar. `--force-local` es la red de seguridad para GNU tar si la ruta aún llevara `:`.
+const relOut = relative(root, out);
+const outArg = !isAbsolute(relOut) && !relOut.startsWith('..') ? relOut : out;
+const r = spawnSync('tar', ['--force-local', '-a', '-cf', outArg, '-T', list], { cwd: root, encoding: 'utf8' });
 rmSync(tmp, { recursive: true, force: true });
 if (r.status !== 0) throw new Error(`tar falló: ${r.stderr}`);
 console.log(`ZIP creado: ${out} (${files.length} archivos, ${(statSync(out).size / 1024).toFixed(0)} kB)`);
