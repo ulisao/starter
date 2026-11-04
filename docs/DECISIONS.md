@@ -55,3 +55,21 @@ Registro de decisiones importantes del generador. Formato: contexto, decisión, 
 
 - **Contexto**: se incrustan en el JS durante `next build`.
 - **Decisión**: el Dockerfile y el compose derivan sus `ARG` de las variables públicas declaradas por los módulos.
+
+## D11 — Funcionalidades multi-backend: capa común + persistencia por backend
+
+- **Contexto**: Better Auth y Mercado Pago valen para cualquier backend, pero su almacenamiento cambia (Prisma vs Convex).
+- **Decisión**: partir en una capa común agnóstica (UI, SDK, webhook, catálogo) más módulos de persistencia (`prisma`/`convex`) que exponen el mismo contrato de servicios (`getSessionUserId()`, `createCheckout()`, `applyPaymentState()`, ...).
+- **Consecuencias**: la capa común no sabe dónde se guardan los datos; agregar un backend a una funcionalidad es agregar una persistencia, no duplicarla. Ver `docs/TEMPLATES.md`.
+
+## D12 — Persistencia de pagos en Convex: mutations serializables + secreto compartido
+
+- **Contexto**: Convex no tiene restricciones únicas ni el `updateMany` condicional de Prisma, y sus funciones públicas puede invocarlas cualquiera.
+- **Decisión**: la idempotencia (crear transacción por `idempotencyKey`, aprobar una sola vez) se resuelve dentro de una mutation, que en Convex es una transacción serializable (leer-comparar-escribir es atómico). Las funciones de `convex/payments.ts` se protegen con el secreto compartido `CONVEX_PAYMENTS_SECRET` (mismo patrón que el storage de Convex), definido en `.env.local` y en el deployment.
+- **Consecuencias**: equivalencia de garantías con la versión Prisma sin claves únicas; el secreto es obligatorio para que el servidor de Next.js llame a esas funciones.
+
+## D13 — Comandos `doctor` y `update` sobre `baretta.config.json`
+
+- **Contexto**: un proyecto generado se desactualiza respecto del perfil (versiones cambiadas a mano, nuevas versiones en el perfil).
+- **Decisión**: `baretta.config.json` guarda la configuración con la que se generó; `doctor` re-planifica con el mismo perfil y contrasta (diagnostica), y `update` reconcilia solo las versiones gestionadas por el perfil y los metadatos, sin tocar código, scripts ni dependencias agregadas a mano. Ninguno instala ni accede a la red.
+- **Consecuencias**: el ciclo de vida posterior a la generación no exige volver a correr el wizard; `computeUpdate()`/`diagnose()` son puros y testeables.

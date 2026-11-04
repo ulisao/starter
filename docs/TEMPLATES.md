@@ -49,7 +49,19 @@ export default {
 };
 ```
 
-Los módulos se descubren solos: todo `src/modules/<capa>/*.js` se carga. No hay registro que editar.
+Un archivo puede exportar **un módulo o un array de módulos** (así una funcionalidad se parte en piezas). Los módulos se descubren solos: todo `src/modules/<capa>/*.js` se carga. No hay registro que editar.
+
+### Slots de Convex
+
+El backend Convex define slots para que auth y pagos aporten a `convex/` sin tocar sus archivos:
+
+- `convexSchemaTables` / `convexSchemaImports`: tablas e imports del `convex/schema.ts`.
+- `convexApiImports` / `convexApiModules`: entradas del `convex/_generated/api.d.ts` pregenerado (para que `tsc` funcione sin haber corrido `convex dev`).
+- `convexComponents`: componentes instalados (`components: { ... }`).
+
+### Composición por persistencia
+
+Si una funcionalidad vale para varios backends pero cambia dónde guarda los datos, se parte en una capa **común** (agnóstica) más una de **persistencia** por backend, todas con el mismo contrato de servicios. Así lo hacen Better Auth (`ui` + `prisma`/`convex`) y Mercado Pago (`common` + `prisma`/`convex`): mover un servicio entre Prisma y Convex no cambia la capa común. Al agregar una funcionalidad con almacenamiento, seguí ese patrón en vez de duplicar todo por backend.
 
 ## Reglas
 

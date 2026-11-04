@@ -12,7 +12,7 @@ El generador **no conoce** ninguna tecnología concreta. Solo sabe componer **m�
 packages/cli/
 ├── bin/baretta.js               Punto de entrada del binario
 ├── src/
-│   ├── index.js                 Enrutador de comandos (create, compatibility)
+│   ├── index.js                 Enrutador de comandos (create, compatibility, doctor, update)
 │   ├── cli/
 │   │   ├── commands/            Un archivo por comando
 │   │   └── prompts/wizard.js    Asistente interactivo (@clack/prompts)
@@ -44,6 +44,14 @@ packages/cli/
 
 `plan()` es puro respecto del disco, por eso los tests de integración generan toda la matriz en memoria.
 
+## Otros comandos
+
+Todos leen el `baretta.config.json` que `create` dejó en el proyecto y lo comparan con el registro; ninguno instala ni accede a la red.
+
+- **`baretta compatibility`**: imprime el perfil activo y el estado de cada combinación (solo lectura).
+- **`baretta doctor [carpeta]`**: reconstruye la configuración, vuelve a `plan()` con el mismo perfil y contrasta contra el proyecto en disco (Node, versiones de dependencias, variables de entorno, estado). Avisa pero no modifica.
+- **`baretta update [carpeta]`**: el complemento de doctor. Reconcilia las versiones gestionadas por el perfil (y `engines.node` + metadatos de `baretta.config.json`) sin tocar el código, los scripts ni las dependencias agregadas a mano. `computeUpdate()` calcula y `applyUpdate()` escribe.
+
 ## Composición por capas
 
 Orden: `base → backend → auth → payments → extras → deployment`. Una capa posterior puede reemplazar un archivo de una anterior **solo** si lo declara en `overrides`; si no, el generador falla con un error de conflicto (nunca se sobrescribe en silencio).
@@ -51,7 +59,14 @@ Orden: `base → backend → auth → payments → extras → deployment`. Una c
 Dos mecanismos evitan que los módulos se pisen:
 
 - **providers**: cada módulo declara su proveedor React y el generador los anida en `src/components/providers.tsx` según `order`.
-- **slots**: puntos de extensión con nombre dentro de una plantilla (por ejemplo las tablas del schema de Convex o el envoltorio de `next.config.ts`). Cada módulo aporta texto; la plantilla lo imprime con `<%= slot_nombre %>`.
+- **slots**: puntos de extensión con nombre dentro de una plantilla (por ejemplo las tablas del schema de Convex, los módulos de `convex/_generated/api.d.ts` o el envoltorio de `next.config.ts`). Cada módulo aporta texto; la plantilla lo imprime con `<%= slot_nombre %>`.
+
+### Composición por persistencia
+
+Cuando una funcionalidad vale para varios backends pero su almacenamiento cambia, se parte en una capa **común** (agnóstica) más una de **persistencia** por backend, todas con el mismo contrato de servicios:
+
+- **Better Auth**: `ui` (formularios, cliente, header) + `prisma` (adaptador Prisma) **o** `convex` (dentro de Convex con `@convex-dev/better-auth`).
+- **Mercado Pago**: `common` (SDK, webhook firmado, catálogo, hooks, UI) + `prisma` **o** `convex` (`convex/payments.ts`, tablas vía slot `convexSchemaTables`). Los servicios `transactions.ts` / `checkout-service.ts` / `subscriptions.ts` exponen la misma firma en ambas persistencias, así que la capa común no sabe dónde se guardan los datos.
 
 ## Qué decide cada capa
 
@@ -60,7 +75,7 @@ Dos mecanismos evitan que los módulos se pisen:
 | base | Next.js, Tailwind, estructura, AGENTS.md, docs | siempre |
 | backend | Convex, Supabase, PostgreSQL, Prisma | `cfg.backend` |
 | auth | Clerk, Supabase Auth, Better Auth, Convex Auth | `cfg.auth` + `cfg.authMethod` |
-| payments | Mercado Pago | `cfg.payments` |
+| payments | Mercado Pago (sobre Prisma o Convex) | `cfg.payments` |
 | extras | Resend, Sentry, Biome, Vitest... | `cfg.extras` |
 | deployment | Vercel + Docker | siempre |
 

@@ -26,6 +26,12 @@ baretta create
 # No interactivo (CI, scripts, agentes)
 baretta create demo --backend postgres --auth clerk --auth-method password-google \
   --payments none --extras biome,vitest --pm npm --install skip --yes --dir /tmp/demo
+
+# Diagnosticar un proyecto generado contra el registro (no instala ni toca la red)
+baretta doctor ./demo
+
+# Reconciliar sus versiones con el perfil (sin tocar tu código); previsualizar con --dry-run
+baretta update ./demo --dry-run
 ```
 
 ## Tests
@@ -49,20 +55,24 @@ node scripts/validate-project.mjs --name prueba --backend postgres --auth none -
 
 Genera en `C:/Users/PC/bs-work/<name>` (ruta corta para evitar el límite de longitud de Windows; cámbiala con `--workdir`), instala, ejecuta typecheck, lint, tests y build. Con `--record` actualiza el registro de compatibilidad si todo pasa.
 
-Matriz completa (tarda: instala cada proyecto):
+Matriz (cada proyecto se instala y compila, así que tarda):
 
 ```bash
-npm run matrix                # todas las combinaciones soportadas
-npm run matrix -- --only convex-clerk
+npm run matrix                      # subconjunto representativo (instala + build real)
+npm run matrix -- --full            # toda la matriz
+npm run matrix -- --dry             # solo generación (sin instalar), humo rápido
+npm run matrix -- --only convex     # filtra por nombre de combinación
+npm run matrix -- --record          # marca verified lo que pase
 ```
 
 ### Estrategia de CI para la matriz
 
-No todo se ejecuta en cada push. Propuesta (ver `.github/workflows/ci.yml` del repositorio):
+No todo se ejecuta en cada push. El workflow del repositorio (`.github/workflows/ci.yml`) ya corre, en cada push/PR a `main`, los tests unit + integración y la matriz **en modo seco** (`--full --dry`: verifica que toda combinación genera sin marcadores sin resolver, sin instalar nada).
 
-- En cada push/PR: tests unit + integración.
-- En PR que toque `templates/`, `src/modules/` o `compatibility/`: `validate-matrix` con un subconjunto representativo (una combinación por backend + una con pagos + una con todos los extras).
-- Semanal o antes de publicar: matriz completa con `--record` en una rama para actualizar el registro.
+Lo que conviene hacer aparte, a mano o en un job programado (es lento: instala cada proyecto):
+
+- En PR que toque `templates/`, `src/modules/` o `compatibility/`: `npm run matrix` (subconjunto representativo con build real).
+- Semanal o antes de publicar: `npm run matrix -- --full --record` en una rama para actualizar el registro.
 
 ## Agregar funcionalidad
 

@@ -29,6 +29,13 @@ T3 fase 1 COMPLETA (8 unidades). Verificado con install+tsc+build real:
 - convex+convex-auth: experimental (tsc+build ok, OTP probado en vivo con backend local).
 No verificado nunca contra servicios reales: Google OAuth, Mercado Pago API, Resend, Sentry DSN, Supabase real. Docker no instalado en la máquina (compose sin `config`).
 
+## Estado al cierre de sesión 3 (2026-11-04) — FASES 3 y 4 (comandos doctor + update) + docs
+Comandos nuevos del ciclo de vida posterior a la generación (leen baretta.config.json, no instalan ni tocan la red):
+- `baretta doctor [carpeta]` (src/cli/commands/doctor.js): re-planifica con el mismo perfil y contrasta Node, versiones de deps (drift + deps agregadas a mano), variables de .env.local (marca secretos) y estado. `diagnose(dir)` puro; `doctorCommand` imprime.
+- `baretta update [carpeta]` (src/cli/commands/update.js): reconcilia versiones gestionadas por el perfil + engines.node + metadatos, sin tocar código/scripts/deps manuales. `computeUpdate(dir)` puro, `applyUpdate()` escribe. Flags --profile/--dry-run/--yes, idempotente.
+- Tests: 55/55 (45 + 5 doctor + 5 update). pack:cli OK. Cerró toda la sección "Futuro" de COMPATIBILITY.md (quedan ideas: baretta migrate entre perfiles).
+- Docs auditados y actualizados: README (comandos + estado), ARCHITECTURE (comandos + composición por persistencia), DEVELOPMENT (doctor/update + flags de matrix + CI real), TEMPLATES (slots de Convex + persistencia), DECISIONS (D11 split persistencia, D12 pagos Convex, D13 doctor/update), packages/cli/README, examples/.
+
 ## Estado al cierre de sesión 2 (2026-11-04) — FASE 2 COMPLETA
 Todo lo de abajo (items 1–5) resuelto. Verificado con `npm test` (45/45), `node scripts/validate-matrix.mjs --full --dry` (33/33 generan limpio) y builds reales (install+typecheck+build) de: convex+none, convex+clerk, convex+better-auth, supabase+clerk, supabase+better-auth, convex+none+subscription, convex+clerk+one-time, convex+better-auth+subscription, postgres+none+TODOS-los-extras. `npm run pack:cli` OK (292 archivos).
 - Pagos sobre Convex: plantillas reestructuradas en shared + prisma/convex (como better-auth). convex/payments.ts + convex/paymentsSubscriptions.ts (tablas vía slot convexSchemaTables, protegidas por CONVEX_PAYMENTS_SECRET, mutations serializables = idempotencia segura). Servicios transactions/checkout/subscriptions con el MISMO contrato en ambas persistencias.
