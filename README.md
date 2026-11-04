@@ -42,6 +42,9 @@ npx baretta compatibility
 
 # Diagnosticar un proyecto ya generado (versiones, Node, variables, estado)
 npx baretta doctor [carpeta]
+
+# Actualizar las versiones de un proyecto generado al perfil (sin tocar tu código)
+npx baretta update [carpeta] [--dry-run]
 ```
 
 Opciones de `create`: `--backend`, `--auth`, `--auth-method`, `--payments`, `--extras`, `--pm`, `--install`, `--dir`, `--yes`. Detalle con `baretta create --help`.

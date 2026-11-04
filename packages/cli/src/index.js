@@ -7,8 +7,9 @@ import { readFileSync } from 'node:fs';
 import { createCommand, CREATE_HELP } from './cli/commands/create.js';
 import { compatibilityCommand } from './cli/commands/compatibility.js';
 import { doctorCommand, DOCTOR_HELP } from './cli/commands/doctor.js';
+import { updateCommand, UPDATE_HELP } from './cli/commands/update.js';
 
-const COMMANDS = { create: createCommand, compatibility: compatibilityCommand, doctor: doctorCommand };
+const COMMANDS = { create: createCommand, compatibility: compatibilityCommand, doctor: doctorCommand, update: updateCommand };
 
 const HELP = `
 Baretta Starter — generador de proyectos Next.js de Estudio Baretta
@@ -19,11 +20,12 @@ Comandos:
   create          Crea un proyecto nuevo (asistente interactivo)
   compatibility   Muestra el perfil de compatibilidad y el estado de cada combinación
   doctor          Diagnostica un proyecto generado contra el registro de compatibilidad
+  update          Actualiza las versiones de un proyecto generado al perfil de compatibilidad
 
 Opciones:
   -v, --version   Versión del CLI
   -h, --help      Ayuda
-${CREATE_HELP}${DOCTOR_HELP}`;
+${CREATE_HELP}${DOCTOR_HELP}${UPDATE_HELP}`;
 
 export async function main(argv) {
   const [cmd, ...rest] = argv;

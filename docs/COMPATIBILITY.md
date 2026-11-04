@@ -86,4 +86,4 @@ No hace falta tocar el código del CLI para nada de esto.
 
 ## Futuro
 
-La arquitectura permite agregar `baretta doctor`, `baretta update` y `baretta compatibility` (este último ya existe en versión de solo lectura) leyendo `baretta.config.json` del proyecto y comparándolo con el registro.
+`baretta compatibility` (perfil y estados, solo lectura), `baretta doctor` (diagnostica un proyecto generado contra el registro) y `baretta update` (reconcilia sus versiones con el perfil) ya existen: todos leen `baretta.config.json` y lo comparan con el registro. La misma arquitectura permitiría, por ejemplo, un `baretta migrate` entre perfiles.
