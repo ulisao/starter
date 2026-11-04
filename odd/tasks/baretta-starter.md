@@ -29,6 +29,14 @@ T3 fase 1 COMPLETA (8 unidades). Verificado con install+tsc+build real:
 - convex+convex-auth: experimental (tsc+build ok, OTP probado en vivo con backend local).
 No verificado nunca contra servicios reales: Google OAuth, Mercado Pago API, Resend, Sentry DSN, Supabase real. Docker no instalado en la máquina (compose sin `config`).
 
+## Estado al cierre de sesión 4 (2026-11-04) — FASE 5: verificación real ampliada
+Builds reales (install+typecheck+build, npm) de 7 combos/caminos que NUNCA se habían compilado, sin bugs:
+- postgres+better-auth+magic-link+resend, supabase+supabase-auth+otp, convex+better-auth+otp+resend, convex+convex-auth+otp+storage+resend (experimental).
+- storage real: supabase (Supabase Storage) y convex (File Storage).
+- pagos sobre Supabase (subscription), antes solo compilado en postgres y convex.
+Barrido de generación previo (9 combos, incluido storage+supabase): sin env duplicada ni marcadores. No hizo falta tocar código.
+Caveat reducido: métodos (magic-link/otp), storage (3 backends) y pagos (3 backends) ahora build-verificados. Sigue sin verificarse contra servicios REALES (OAuth, API MP, Resend, Sentry, Supabase/Convex en vivo) y falta test de signature.ts de MP.
+
 ## Estado al cierre de sesión 3 (2026-11-04) — FASES 3 y 4 (comandos doctor + update) + docs
 Comandos nuevos del ciclo de vida posterior a la generación (leen baretta.config.json, no instalan ni tocan la red):
 - `baretta doctor [carpeta]` (src/cli/commands/doctor.js): re-planifica con el mismo perfil y contrasta Node, versiones de deps (drift + deps agregadas a mano), variables de .env.local (marca secretos) y estado. `diagnose(dir)` puro; `doctorCommand` imprime.
