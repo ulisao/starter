@@ -44,38 +44,35 @@ function envKeys(path) {
   return keys;
 }
 
-export async function doctorCommand(argv) {
-  const dir = resolve(argv[0] ?? '.');
+/**
+ * Diagnostica el proyecto en `dir` SIN imprimir nada; devuelve el resultado estructurado para que
+ * lo usen tanto doctorCommand como los tests. `status`: 'ok' | 'invalid'. Cuando es 'ok' incluye
+ * `report` (lista de { level: 'OK'|'WARN'|'ERROR', msg }), `errors`, `warns`, `pkg` y `config`.
+ */
+export async function diagnose(dir) {
   const report = [];
   let errors = 0;
   let warns = 0;
-  const ok = (m) => report.push(`  OK    ${m}`);
+  const ok = (m) => report.push({ level: 'OK', msg: m });
   const warn = (m) => {
     warns++;
-    report.push(`  WARN  ${m}`);
+    report.push({ level: 'WARN', msg: m });
   };
   const err = (m) => {
     errors++;
-    report.push(`  ERROR ${m}`);
+    report.push({ level: 'ERROR', msg: m });
   };
 
   const configPath = join(dir, 'baretta.config.json');
   if (!existsSync(configPath)) {
-    console.error(`No se encontró baretta.config.json en ${dir}. ¿Es un proyecto generado con baretta?`);
-    process.exitCode = 1;
-    return;
+    return { status: 'invalid', reason: `No se encontró baretta.config.json en ${dir}. ¿Es un proyecto generado con baretta?` };
   }
   const config = readJson(configPath);
   const pkgPath = join(dir, 'package.json');
   if (!existsSync(pkgPath)) {
-    console.error(`No se encontró package.json en ${dir}.`);
-    process.exitCode = 1;
-    return;
+    return { status: 'invalid', reason: `No se encontró package.json en ${dir}.` };
   }
   const pkg = readJson(pkgPath);
-
-  console.log(`Diagnóstico de ${pkg.name ?? dir}`);
-  console.log(`Config: backend=${config.backend}, auth=${config.auth}${config.authMethod ? `/${config.authMethod}` : ''}, pagos=${config.payments?.enabled ? config.payments.type : 'no'}, perfil=${config.compatibilityProfile}\n`);
 
   // Reconstruye la configuración y vuelve a planificar con el mismo perfil.
   const cfg = {
@@ -96,9 +93,7 @@ export async function doctorCommand(argv) {
     profile = loadProfile(config.compatibilityProfile ?? 'stable');
     expected = await plan(cfg, { profileName: config.compatibilityProfile ?? 'stable' });
   } catch (e) {
-    console.error(`No se pudo reconstruir el proyecto desde baretta.config.json: ${e.message}`);
-    process.exitCode = 1;
-    return;
+    return { status: 'invalid', reason: `No se pudo reconstruir el proyecto desde baretta.config.json: ${e.message}` };
   }
 
   // ── Node ────────────────────────────────────────────────────────────────────
@@ -151,8 +146,22 @@ export async function doctorCommand(argv) {
   }
   if (expected.status === 'experimental') warn(`esta combinación es experimental: revisá docs/COMPATIBILITY.md antes de producción.`);
 
-  // ── Resumen ──────────────────────────────────────────────────────────────────
-  console.log(report.join('\n'));
+  return { status: 'ok', report, errors, warns, pkg, config };
+}
+
+/** Envoltura de CLI: corre el diagnóstico e imprime el informe. Código 1 si hay errores o es inválido. */
+export async function doctorCommand(argv) {
+  const dir = resolve(argv[0] ?? '.');
+  const result = await diagnose(dir);
+  if (result.status === 'invalid') {
+    console.error(result.reason);
+    process.exitCode = 1;
+    return;
+  }
+  const { report, errors, warns, pkg, config } = result;
+  console.log(`Diagnóstico de ${pkg.name ?? dir}`);
+  console.log(`Config: backend=${config.backend}, auth=${config.auth}${config.authMethod ? `/${config.authMethod}` : ''}, pagos=${config.payments?.enabled ? config.payments.type : 'no'}, perfil=${config.compatibilityProfile}\n`);
+  for (const { level, msg } of report) console.log(`  ${level.padEnd(5)} ${msg}`);
   console.log(`\n${errors ? `${errors} error(es), ` : ''}${warns} advertencia(s). ${errors ? 'Revisá los ERROR.' : 'Sin errores.'}`);
   if (errors) process.exitCode = 1;
 }

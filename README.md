@@ -39,6 +39,9 @@ npx baretta create mi-app --backend postgres --auth better-auth --auth-method pa
 
 # Ver perfil de compatibilidad y estado de cada combinación
 npx baretta compatibility
+
+# Diagnosticar un proyecto ya generado (versiones, Node, variables, estado)
+npx baretta doctor [carpeta]
 ```
 
 Opciones de `create`: `--backend`, `--auth`, `--auth-method`, `--payments`, `--extras`, `--pm`, `--install`, `--dir`, `--yes`. Detalle con `baretta create --help`.
