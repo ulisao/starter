@@ -11,6 +11,8 @@ export default {
   overrides: ['src/services/contact-service.ts'],
   dependencies: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
   devDependencies: ['prisma', 'tsx', 'dotenv', '@types/pg'],
+  // Scripts de instalación que pnpm debe permitir (prisma descarga motores; esbuild lo usa tsx).
+  allowBuilds: ['prisma', '@prisma/engines', 'esbuild'],
   scripts: {
     postinstall: 'prisma generate',
     'db:generate': 'prisma generate',

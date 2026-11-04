@@ -6,7 +6,7 @@ import * as p from '@clack/prompts';
 import { runWizard } from '../prompts/wizard.js';
 import { validateConfig, LABELS } from '../../core/configuration/schema.js';
 import { plan, writeProject } from '../../core/generator/index.js';
-import { commandsFor, install, isAvailable } from '../../core/package-manager/index.js';
+import { commandsFor, install, isAvailable, runScript } from '../../core/package-manager/index.js';
 
 const OPTIONS = {
   backend: { type: 'string' },
@@ -120,6 +120,11 @@ export async function createCommand(argv) {
     p.log.step(`Ejecutando "${cmds.install}" en ${targetDir}`);
     const r = await install(pm, targetDir);
     installed = r.ok;
+    // Biome: las plantillas no están formateadas con su estilo; se formatea una vez para que `lint` (biome check) pase.
+    if (r.ok && cfg.extras.includes('biome')) {
+      const f = await runScript(pm, 'lint:fix', targetDir);
+      if (!f.ok) p.log.warn('No se pudo formatear con Biome; ejecuta `lint:fix` a mano.');
+    }
     if (!r.ok) p.log.error(`La instalación falló (código ${r.code}). El proyecto se conservó; corré "${cmds.install}" a mano dentro de la carpeta.`);
   }
 

@@ -66,6 +66,8 @@ const run = { npm: 'npm run', pnpm: 'pnpm', yarn: 'yarn', bun: 'bun run' }[cfg.p
 const steps = [];
 if (!values['skip-install']) steps.push(['install', `${cfg.packageManager} install`]);
 steps.push(['typecheck', `${run} typecheck`]);
+// Igual que el CLI tras instalar: Biome formatea una vez el código generado antes de revisarlo.
+if (pkg.scripts['lint:fix']) steps.push(['lint:fix', `${run} lint:fix`]);
 for (const s of ['lint', 'test']) if (pkg.scripts[s]) steps.push([s, `${run} ${s}`]);
 steps.push(['build', `${run} build`]);
 

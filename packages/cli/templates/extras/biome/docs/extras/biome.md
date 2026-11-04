@@ -13,9 +13,8 @@ Biome reemplaza a ESLint y Prettier con una sola herramienta rápida. Next.js 16
 
 ## Comandos
 
-- `<%= runCmd %> lint` revisa las reglas de lint (es lo que ejecuta la CI).
-- `<%= runCmd %> check` revisa además formato e imports ordenados; falla si algo no está formateado.
-- `<%= runCmd %> lint:fix` aplica las correcciones seguras de `check` (formato e imports). Ejecútalo una vez al empezar: los archivos generados por el starter no están formateados con el estilo de Biome.
+- `<%= runCmd %> lint` ejecuta `biome check`: reglas de lint, formato e imports ordenados; falla si algo no está formateado (es lo que ejecuta la CI).
+- `<%= runCmd %> lint:fix` aplica las correcciones seguras de `check` (formato e imports). El CLI lo ejecuta una vez tras instalar; si generaste con `--install skip`, ejecútalo tú antes del primer `lint`.
 - `<%= runCmd %> format` solo formatea.
 
 ## Configuración

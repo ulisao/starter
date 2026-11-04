@@ -101,6 +101,7 @@ export async function plan(rawCfg, { profileName = 'stable' } = {}) {
   const stack = [];
   const notes = [];
   const extrasSummary = [];
+  const allowBuilds = new Set(); // paquetes con scripts de instalación que pnpm debe permitir
 
   // Providers de React: cada módulo puede declarar { importLine, open, close, order }.
   // Se anidan por `order` (menor = más externo) dentro de src/components/providers.tsx.
@@ -130,6 +131,7 @@ export async function plan(rawCfg, { profileName = 'stable' } = {}) {
       if (env.some((x) => x.key === e.key)) throw new Error(`Variable de entorno duplicada ${e.key} (${m.id}).`);
       env.push({ module: m.id, ...e });
     }
+    call(m.allowBuilds, cfg).forEach((d) => allowBuilds.add(d));
     stack.push(...call(m.stack, cfg));
     notes.push(...call(m.notes, cfg));
     if (m.layer === 'extras' && m.summary) extrasSummary.push(`**${m.id.replace('extra-', '')}** — ${m.summary}`);
@@ -227,6 +229,13 @@ export async function plan(rawCfg, { profileName = 'stable' } = {}) {
   // ── 4. Archivos generados por el núcleo ───────────────────────────────────────
   add('package.json', JSON.stringify(packageJson, null, 2) + '\n', 'core');
   add('.env.example', renderEnvExample(env), 'core');
+  // pnpm (>=10) no ejecuta scripts de instalación sin permiso explícito y falla con ERR_PNPM_IGNORED_BUILDS.
+  if (cfg.packageManager === 'pnpm' && allowBuilds.size) {
+    const lines = [...allowBuilds].sort().map((n) => `  '${n}': true`);
+    add('pnpm-workspace.yaml', `allowBuilds:\n${lines.join('\n')}\n`, 'core');
+  }
+  // Yarn 4 usa Plug'n'Play por defecto, incompatible con Next/Prisma: se fuerza node_modules.
+  if (cfg.packageManager === 'yarn') add('.yarnrc.yml', 'nodeLinker: node-modules\n', 'core');
   add(
     'baretta.config.json',
     JSON.stringify(

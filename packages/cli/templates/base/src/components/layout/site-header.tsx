@@ -8,6 +8,11 @@ export function SiteHeader() {
         <Link href="/" className="font-semibold">
           {siteConfig.name}
         </Link>
+<%#if isConvexAuth%>
+        <Link href="/login" className="text-sm text-muted hover:text-foreground">
+          Acceder
+        </Link>
+<%#endif%>
       </nav>
     </header>
   );

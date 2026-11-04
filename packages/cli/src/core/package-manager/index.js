@@ -28,12 +28,14 @@ export function detectPackageManager(cwd = process.cwd(), env = process.env) {
   return 'npm';
 }
 
+// Yarn: se asume Yarn 4 (Berry, el que activa Corepack): `--immutable` y `.yarnrc.yml` con nodeLinker node-modules.
+// `exec` ejecuta binarios YA instalados en el proyecto (no descarga paquetes, a diferencia de `dlx`).
 /** Comandos equivalentes por gestor (se usan en plantillas, docs y en la instalación). */
 export function commandsFor(pm) {
   const table = {
     npm: { install: 'npm install', ci: 'npm ci', run: 'npm run', exec: 'npx', lockfile: 'package-lock.json' },
-    pnpm: { install: 'pnpm install', ci: 'pnpm install --frozen-lockfile', run: 'pnpm', exec: 'pnpm dlx', lockfile: 'pnpm-lock.yaml' },
-    yarn: { install: 'yarn install', ci: 'yarn install --frozen-lockfile', run: 'yarn', exec: 'yarn dlx', lockfile: 'yarn.lock' },
+    pnpm: { install: 'pnpm install', ci: 'pnpm install --frozen-lockfile', run: 'pnpm', exec: 'pnpm exec', lockfile: 'pnpm-lock.yaml' },
+    yarn: { install: 'yarn install', ci: 'yarn install --immutable', run: 'yarn', exec: 'yarn', lockfile: 'yarn.lock' },
     bun: { install: 'bun install', ci: 'bun install --frozen-lockfile', run: 'bun run', exec: 'bunx', lockfile: 'bun.lock' },
   };
   return table[pm];
@@ -50,6 +52,16 @@ export function isAvailable(pm) {
 export function install(pm, cwd) {
   return new Promise((resolve) => {
     const child = spawn(pm, ['install'], { cwd, shell: useShell, stdio: 'inherit' });
+    child.on('error', () => resolve({ ok: false, code: -1 }));
+    child.on('close', (code) => resolve({ ok: code === 0, code }));
+  });
+}
+
+/** Ejecuta `<pm> run <script>` en `cwd` (sin salida). Resuelve { ok, code }; nunca lanza. */
+export function runScript(pm, script, cwd) {
+  return new Promise((resolve) => {
+    const args = pm === 'npm' || pm === 'bun' ? ['run', script] : [script];
+    const child = spawn(pm, args, { cwd, shell: useShell, stdio: 'ignore' });
     child.on('error', () => resolve({ ok: false, code: -1 }));
     child.on('close', (code) => resolve({ ok: code === 0, code }));
   });

@@ -23,6 +23,7 @@ const COMBOS = [
 
 const make = (backend, auth, over = {}) => ({
   name: 'demo-app',
+  framework: 'nextjs',
   backend,
   auth,
   authMethod: auth === 'none' ? null : 'password',
