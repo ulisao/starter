@@ -92,6 +92,11 @@ export default [
       'Pagos: precios y productos/planes se definen SOLO en el servidor (`src/services/payments/catalog.ts`); el cliente envía un identificador, nunca un monto. Las reglas de negocio al aprobar un pago van en `src/services/payments/hooks.ts`.',
     ],
   },
+  {
+    id: 'payments-mercadopago-vitest',
+    when: (cfg) => mpEnabled(cfg) && cfg.extras.includes('vitest'),
+    templates: 'payments/mercadopago/vitest',
+  },
   // ── Persistencia común ──────────────────────────────────────────────────────
   {
     id: 'payments-mercadopago-prisma',
