@@ -3,3 +3,7 @@ node_modules/
 *.zip
 dist/
 .DS_Store
+
+# Notas locales de trabajo con agentes (no forman parte del generador)
+odd/
+.atl/
