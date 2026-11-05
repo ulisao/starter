@@ -6,7 +6,7 @@ import * as p from '@clack/prompts';
 import { runWizard } from '../prompts/wizard.js';
 import { validateConfig, LABELS } from '../../core/configuration/schema.js';
 import { plan, writeProject } from '../../core/generator/index.js';
-import { commandsFor, install, isAvailable, runScript } from '../../core/package-manager/index.js';
+import { clerkInit, commandsFor, install, isAvailable, runScript } from '../../core/package-manager/index.js';
 
 const OPTIONS = {
   backend: { type: 'string' },
@@ -128,9 +128,24 @@ export async function createCommand(argv) {
     if (!r.ok) p.log.error(`La instalación falló (código ${r.code}). El proyecto se conservó; corré "${cmds.install}" a mano dentro de la carpeta.`);
   }
 
+  // Clerk: sin claves el proyecto solo muestra una pantalla de ayuda. Se ofrece generarlas ahora
+  // (solo en modo interactivo; `clerk init` no requiere cuenta y escribe claves temporales).
+  let clerkKeysDone = false;
+  if (cfg.auth === 'clerk' && !values.yes) {
+    const ok = await p.confirm({ message: '¿Generar claves temporales de Clerk ahora? (ejecutará "npx clerk@latest init"; no requiere cuenta)', initialValue: true });
+    if (ok === true) {
+      const r = await clerkInit(targetDir);
+      clerkKeysDone = r.ok;
+      if (!r.ok) p.log.warn('No se pudieron generar las claves de Clerk; hazlo a mano con "npx clerk@latest init".');
+    }
+  }
+
   const rel = relative(process.cwd(), targetDir) || '.';
   const next = [`cd ${rel}`];
   if (!installed) next.push(cmds.install);
+  if (cfg.auth === 'clerk' && !clerkKeysDone) {
+    next.push('npx clerk@latest init   # claves temporales de Clerk, sin cuenta (sin ellas la app solo muestra una guía)');
+  }
   next.push('cp .env.example .env.local   # y completá los valores (ver docs/ENVIRONMENT.md)');
   next.push(`${cmds.run} dev`);
   p.note(next.join('\n'), 'Próximos pasos');

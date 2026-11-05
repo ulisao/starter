@@ -57,6 +57,15 @@ export function install(pm, cwd) {
   });
 }
 
+/** Ejecuta `npx clerk@latest init` (interactivo, hereda stdio) en `cwd`. Resuelve { ok, code }; nunca lanza. */
+export function clerkInit(cwd) {
+  return new Promise((resolve) => {
+    const child = spawn('npx', ['--yes', 'clerk@latest', 'init'], { cwd, shell: useShell, stdio: 'inherit' });
+    child.on('error', () => resolve({ ok: false, code: -1 }));
+    child.on('close', (code) => resolve({ ok: code === 0, code }));
+  });
+}
+
 /** Ejecuta `<pm> run <script>` en `cwd` (sin salida). Resuelve { ok, code }; nunca lanza. */
 export function runScript(pm, script, cwd) {
   return new Promise((resolve) => {

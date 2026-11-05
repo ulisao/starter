@@ -13,9 +13,9 @@ export default {
   dependencies: ['@clerk/nextjs'],
   providers: [
     {
-      importLine: 'import { ClerkProvider } from "@clerk/nextjs";',
-      open: '<ClerkProvider>',
-      close: '</ClerkProvider>',
+      importLine: 'import { ClerkAuthProvider } from "@/components/auth/clerk-auth-provider";',
+      open: '<ClerkAuthProvider>',
+      close: '</ClerkAuthProvider>',
       order: 10,
     },
   ],

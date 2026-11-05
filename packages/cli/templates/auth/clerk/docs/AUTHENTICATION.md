@@ -11,7 +11,8 @@ lo primero. Lo segundo lo decides tú y **siempre se verifica en el servidor** (
 ## Arquitectura
 | Archivo | Función |
 | --- | --- |
-| `src/components/providers.tsx` | Monta `<ClerkProvider>` (generado desde el módulo). |
+| `src/components/providers.tsx` | Monta `<ClerkAuthProvider>` (generado desde el módulo). |
+| `src/components/auth/clerk-auth-provider.tsx` | Envuelve a `<ClerkProvider>`; si faltan las claves muestra una guía en vez del error "Publishable key not valid". |
 | `src/proxy.ts` | `clerkMiddleware`: lee la sesión y protege `/dashboard`. Next.js 16 usa `proxy.ts`, no `middleware.ts`. |
 | `src/app/sign-in`, `src/app/sign-up` | Páginas con los componentes oficiales `<SignIn />` y `<SignUp />`. |
 | `src/components/layout/site-header.tsx` | Botones de acceso y `<UserButton />`. |
@@ -59,7 +60,7 @@ if (!userId) throw new Error("No autenticado");
 Para proteger más rutas, agrégalas a `createRouteMatcher([...])` en `src/proxy.ts` y vuelve a comprobar la sesión dentro de cada Server Action o Route Handler.
 
 ## Errores frecuentes
-- **`Publishable key not valid` en el build:** la clave debe empezar por `pk_test_` o `pk_live_` y copiarse completa.
+- **`Publishable key not valid` / pantalla "Falta configurar Clerk":** ejecuta `npx clerk@latest init` (claves temporales, sin cuenta) o copia las claves a `.env.local` y reinicia `dev`. En el build: la clave debe empezar por `pk_test_` o `pk_live_` y copiarse completa.
 - **Redirección infinita a `/sign-in`:** las URLs de `.env.local` no coinciden con las rutas reales.
 - **Aparecen métodos de acceso que no elegiste:** están activos en el Dashboard de Clerk; desactívalos allí.
 - **`auth() was called but Clerk can't detect usage of clerkMiddleware()`:** el archivo debe llamarse `src/proxy.ts` y exportar el middleware por defecto.
@@ -73,7 +74,7 @@ Convex valida los tokens que emite Clerk; así las funciones de `convex/` saben 
 2. Guarda ese dominio en el deployment de Convex (no en `.env.local`): `<%= execCmd %> convex env set CLERK_JWT_ISSUER_DOMAIN https://tu-instancia.clerk.accounts.dev`. Para producción repite el comando contra el deployment de producción (`--prod`).
 3. Ejecuta `<%= runCmd %> convex:dev` para subir `convex/auth.config.ts`.
 
-Piezas: `convex/auth.config.ts` (declara a Clerk como emisor), `src/lib/convex/client-provider.tsx` (`ConvexProviderWithClerk`, anidado dentro de `<ClerkProvider>`) y `convex/viewer.ts` (ejemplo de función que lee la identidad con `ctx.auth.getUserIdentity()`; `identity.subject` es el mismo id que devuelve `getSessionUserId()`).
+Piezas: `convex/auth.config.ts` (declara a Clerk como emisor), `src/lib/convex/client-provider.tsx` (`ConvexProviderWithClerk`, anidado dentro de `<ClerkAuthProvider>`) y `convex/viewer.ts` (ejemplo de función que lee la identidad con `ctx.auth.getUserIdentity()`; `identity.subject` es el mismo id que devuelve `getSessionUserId()`).
 
 Errores frecuentes: `No auth provider found matching the given token` indica que `CLERK_JWT_ISSUER_DOMAIN` falta o no coincide con el emisor del token; `useQuery` devuelve datos de usuario `null` mientras Clerk carga (usa `useConvexAuth()` para esperar).
 <%#endif%>

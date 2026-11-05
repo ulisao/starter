@@ -158,3 +158,21 @@ test('validateConfig acepta toda la matriz con todos los métodos', () => {
     }
   }
 });
+
+// Regresión: un proyecto Clerk recién generado (sin claves) no debe romperse con
+// "Publishable key not valid". El provider valida la clave y el proxy no ejecuta Clerk sin ella.
+test('clerk: el proyecto sin claves muestra una guía en vez de romperse', async () => {
+  for (const backend of ['convex', 'supabase', 'postgres']) {
+    const p = await plan(make(backend, 'clerk'));
+    const providers = p.files.get('src/components/providers.tsx');
+    assert.match(providers, /ClerkAuthProvider/, `${backend}: providers.tsx`);
+    assert.doesNotMatch(providers, /<ClerkProvider>/, `${backend}: ClerkProvider crudo`);
+    assert.match(p.files.get('src/components/auth/clerk-auth-provider.tsx'), /CLAVE_VALIDA/);
+    assert.match(p.files.get('src/proxy.ts'), /tieneClaves/);
+    // Nada fuera del provider debe montar ClerkProvider directamente.
+    for (const [file, content] of all(p)) {
+      if (!file.startsWith("src/") || file === "src/components/auth/clerk-auth-provider.tsx") continue;
+      assert.doesNotMatch(content, /<ClerkProvider/, `${backend}: ${file}`);
+    }
+  }
+});
