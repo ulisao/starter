@@ -72,6 +72,8 @@ No todo se ejecuta en cada push. El workflow del repositorio (`.github/workflows
 Lo que conviene hacer aparte, a mano o en un job programado (es lento: instala cada proyecto):
 
 - En PR que toque `templates/`, `src/modules/` o `compatibility/`: `npm run matrix` (subconjunto representativo con build real).
+- Semanal (automático): `.github/workflows/matrix.yml` corre `validate-matrix --full` y `scripts/smoke-no-keys.mjs` (un proyecto Clerk sin claves debe mostrar la guía, no romperse). También se lanza a demanda desde Actions.
+- Humo contra servicios reales (opt-in): `node scripts/smoke-live.mjs` con credenciales de **sandbox** en el entorno (Clerk, Mercado Pago, Resend, Supabase, Convex); omite lo que no tenga variables. En CI se activa con la variable `ENABLE_LIVE_SMOKE=true` y secretos `SANDBOX_*`.
 - Semanal o antes de publicar: `npm run matrix -- --full --record` en una rama para actualizar el registro.
 
 ## Agregar funcionalidad

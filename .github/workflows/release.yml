@@ -1,0 +1,38 @@
+# Publica `baretta` en npm al crear un tag `v<versión>`. Requiere el secreto NPM_TOKEN.
+# Usa provenance (firma el origen del paquete); exige que el tag coincida con la versión.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write # provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          registry-url: https://registry.npmjs.org
+
+      - name: El tag coincide con la versión del paquete
+        run: |
+          v=$(node -p "require('./packages/cli/package.json').version")
+          [ "refs/tags/v$v" = "$GITHUB_REF" ] || { echo "Tag $GITHUB_REF no coincide con la versión $v"; exit 1; }
+
+      - run: npm install
+        working-directory: packages/cli
+      - run: npm test
+        working-directory: packages/cli
+      - name: Verificar el tarball empaquetado
+        run: node scripts/pack.mjs
+
+      - run: npm publish --access public --provenance
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

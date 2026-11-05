@@ -1,0 +1,54 @@
+# Verificación real de la matriz: genera, instala, typecheck y build de cada combinación.
+# Es lenta, así que corre de noche/semanalmente (y a demanda), no en cada PR. Detecta roturas
+# causadas por dependencias upstream antes de que las encuentre un usuario.
+name: Matrix
+
+on:
+  schedule:
+    - cron: "0 5 * * 1" # lunes 05:00 UTC
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Matriz completa (más lenta) en vez del subconjunto representativo"
+        type: boolean
+        default: false
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+
+      - name: Instalar dependencias del CLI
+        run: npm install
+        working-directory: packages/cli
+
+      - name: Matriz (install + typecheck + build)
+        run: node scripts/validate-matrix.mjs ${{ (inputs.full || github.event_name == 'schedule') && '--full' || '' }}
+
+      - name: Clerk sin claves muestra la guía de configuración
+        run: node scripts/smoke-no-keys.mjs
+
+  # Opcional: solo corre si defines secretos de SANDBOX en el repositorio. Cada comprobación se
+  # omite si falta su variable.
+  live:
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_LIVE_SMOKE == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+      - name: Humo contra servicios reales
+        run: node scripts/smoke-live.mjs
+        env:
+          CLERK_SECRET_KEY: ${{ secrets.SANDBOX_CLERK_SECRET_KEY }}
+          MERCADOPAGO_ACCESS_TOKEN: ${{ secrets.SANDBOX_MERCADOPAGO_ACCESS_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.SANDBOX_RESEND_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SANDBOX_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SANDBOX_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.SANDBOX_CONVEX_URL }}

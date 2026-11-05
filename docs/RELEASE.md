@@ -26,6 +26,16 @@ npx baretta create demo --backend postgres --auth none --yes --install skip
 
 ## Publicar
 
+### Automático (recomendado)
+
+`.github/workflows/release.yml` publica con provenance al subir un tag `v<versión>` (debe coincidir con `packages/cli/package.json`). Requiere el secreto `NPM_TOKEN` y que `packages/cli/package.json` tenga el campo `repository` apuntando al repositorio remoto (necesario para provenance; agrégalo cuando exista el remoto).
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+### Manual
+
 ```bash
 cd packages/cli
 npm login

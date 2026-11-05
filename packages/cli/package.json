@@ -21,9 +21,25 @@
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\"",
     "test:unit": "node --test \"tests/unit/*.test.js\"",
-    "test:integration": "node --test \"tests/integration/*.test.js\""
+    "test:integration": "node --test \"tests/integration/*.test.js\"",
+    "prepublishOnly": "npm test"
   },
   "dependencies": {
     "@clack/prompts": "1.8.1"
+  },
+  "keywords": [
+    "nextjs",
+    "starter",
+    "generator",
+    "scaffold",
+    "clerk",
+    "convex",
+    "supabase",
+    "prisma",
+    "mercadopago",
+    "ai-agents"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
