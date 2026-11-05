@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/*
+  TOKENS DE DISEÑO
+  ----------------
+  Todo el aspecto visual sale de estas variables. Para re-skinnear el proyecto
+  (por ejemplo a partir de una captura o una referencia visual) cambia los
+  valores aquí; los componentes no necesitan tocarse.
+
+  - Colores: --background / --foreground son la base; --accent es el color de marca.
+  - Tipografía: --font-sans. Si agregas una fuente web, cárgala con next/font en
+    src/app/layout.tsx y asigna la variable aquí.
+  - Forma: --radius controla el redondeo de botones, inputs y tarjetas.
+*/
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #111827;
+  --accent-foreground: #ffffff;
+  --danger: #b91c1c;
+  --radius: 0.5rem;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Modo oscuro automático según la preferencia del sistema. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --muted: #9ca3af;
+    --border: #262626;
+    --accent: #ededed;
+    --accent-foreground: #0a0a0a;
+    --danger: #f87171;
+  }
+}
+
+/* Expone los tokens como utilidades de Tailwind: bg-background, text-muted, border-border... */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --radius-md: var(--radius);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

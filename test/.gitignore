@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Variables de entorno: NUNCA se suben. Solo .env.example va al repositorio.
+.env
+.env.*
+!.env.example
+
+# Prisma Client generado (se regenera con `prisma generate`)
+src/generated/
+
+# Tests y cobertura
+coverage/
+playwright-report/
+test-results/
+
+# Sistema y editores
+.DS_Store
+*.log
+*.tsbuildinfo
+.vercel

@@ -1,0 +1,27 @@
+{
+  "starterVersion": "1.0.0",
+  "compatibilityProfile": "stable",
+  "compatibilityStatus": "verified",
+  "framework": "nextjs",
+  "backend": "convex",
+  "orm": null,
+  "auth": "clerk",
+  "authMethod": "google",
+  "ui": "tailwind",
+  "payments": {
+    "enabled": true,
+    "provider": "mercadopago",
+    "type": "one-time"
+  },
+  "deployment": [
+    "vercel",
+    "docker"
+  ],
+  "extras": [
+    "resend",
+    "playwright",
+    "vitest",
+    "rate-limit"
+  ],
+  "packageManager": "npm"
+}
